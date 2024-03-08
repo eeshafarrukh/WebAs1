@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Job Application Form</title>
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="container">
+    <form id="jobApplicationForm">
+        <h1>Job Application Form</h1>
+
+        <div class="form-box">
+            <h2>Personal Information</h2>
+            <label>First Name:</label>
+            <input type="text" name="firstName" id="firstName" required placeholder="First Name">
+
+            <label>Last Name:</label>
+            <input type="text" name="lastName" id="lastName" required placeholder="Last Name">
+
+            <label>Phone Number:</label>
+            <input type="tel" name="phoneNumber" id="phoneNumber" required placeholder="Phone Number">
+
+            <label>Email Address:</label>
+            <input type="email" name="email" id="email" required placeholder="Email Address">
+
+            <label>Street:</label>
+            <input type="text" name="street" id="street" required placeholder="Street">
+
+            <label>City:</label>
+            <input type="text" name="city" id="city" required placeholder="City">
+
+            <label>State:</label>
+            <input type="text" name="state" id="state" required placeholder="State">
+
+            <label>ZIP Code:</label>
+            <input type="text" name="zipCode" id="zipCode" required placeholder="ZIP Code">
+        </div>
+
+        <div class="form-box">
+            <h2>Resume and Cover Letter</h2>
+            <label>Upload Resume:</label>
+            <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" required>
+
+            <label>Cover Letter:</label>
+            <textarea name="coverLetter" id="coverLetter" rows="4" required placeholder="Type your cover letter here"></textarea>
+        </div>
+
+        <div class="form-box">
+            <h2>Education</h2>
+            <label>Highest Level of Education:</label>
+            <input type="text" name="educationLevel" id="educationLevel" required placeholder="Highest Level of Education">
+
+            <label>School/University Name:</label>
+            <input type="text" name="schoolName" id="schoolName" required placeholder="School/University Name">
+
+            <label>Major/Area of Study:</label>
+            <input type="text" name="major" id="major" required placeholder="Major/Area of Study">
+
+            <label>Graduation Year:</label>
+            <input type="text" name="graduationYear" id="graduationYear" required placeholder="Graduation Year">
+        </div>
+
+        <div class="form-box">
+            <h2>Employment History</h2>
+            <label>Previous Job Titles:</label>
+            <input type="text" name="jobTitles" id="jobTitles" required placeholder="Previous Job Titles">
+
+            <label>Company Names:</label>
+            <input type="text" name="companyNames" id="companyNames" required placeholder="Company Names">
+
+            <label>Employment Dates:</label>
+            <input type="text" name="employmentDates" id="employmentDates" required placeholder="Employment Dates">
+
+            <label>Job Responsibilities:</label>
+            <textarea name="jobResponsibilities" id="jobResponsibilities" rows="4" required placeholder="Job Responsibilities"></textarea>
+        </div>
+
+        <div class="form-box">
+            <h2>Skills</h2>
+            <label>Relevant Skills:</label>
+            <input type="text" name="relevantSkills" id="relevantSkills" required placeholder="Relevant Skills">
+
+            <label>Certifications:</label>
+            <input type="text" name="certifications" id="certifications" placeholder="Certifications">
+        </div>
+
+        <div class="form-box">
+            <h2>Availability</h2>
+            <label>Start Date:</label>
+            <input type="date" name="startDate" id="startDate" required>
+
+            <label>Preferred Work Schedule:</label>
+            <input type="text" name="workSchedule" id="workSchedule" required placeholder="Preferred Work Schedule">
+
+            <label>Willingness to Relocate:</label>
+            <select name="relocate" id="relocate" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+
+        <div class="form-box">
+            <h2>References</h2>
+            <label>Reference Name:</label>
+            <input type="text" name="referenceName" id="referenceName" required placeholder="Reference Name">
+
+            <label>Reference Contact Information:</label>
+            <input type="text" name="referenceContact" id="referenceContact" required placeholder="Reference Contact Information">
+
+            <label>Relationship to Applicant:</label>
+            <input type="text" name="relationship" id="relationship" required placeholder="Relationship to Applicant">
+        </div>
+
+        <div class="form-box">
+            <h2>Additional Questions</h2>
+            <label>Why do you want to work for this company?</label>
+            <textarea name="reasonToWork" id="reasonToWork" rows="4" required placeholder="Your answer"></textarea>
+        </div>
+
+        <div class="form-box">
+          <h2>Consent and Agreement</h2>
+
+          <label class="checkbox-container">
+              <input type="checkbox" name="agreeTerms" id="agreeTerms" required>
+              I agree to the terms and conditions
+          </label>
+
+          <label class="checkbox-container">
+              <input type="checkbox" name="privacyPolicy" id="privacyPolicy" required>
+              I acknowledge the privacy policy
+          </label>
+      </div>
+
+        <button type="button" onclick="submitForm()">Submit Application</button>
+
+    </form>
+
+    <button class="table-btn" onclick="viewApplicationsAsTable()">View Applications as Table</button>
+
+    <div id="applicationsTableContainer"></div>
+
+</div>
+
+</body>
+</html>
+
+<script>
+  function submitForm() {
+    const form = document.getElementById('jobApplicationForm');
+    const elements = form.elements;
+    resetValidationMessages();
+    let isValid = true;
+    function isValidEmail(email) {
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        return emailRegex.test(email);
+    }
+    function isValidPhoneNumber(phoneNumber) {
+        const phoneRegex = /^\d{11}$/;
+        return phoneRegex.test(phoneNumber);
+    }
+    for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        if (element.required && element.value.trim() === '') {
+            isValid = false;
+            displayValidationMessage(element, 'This field is required.');
+        }
+        if (element.type === 'email' && !isValidEmail(element.value.trim())) {
+            isValid = false;
+            displayValidationMessage(element, 'Invalid email format.');
+        }
+        if (element.type === 'tel' && !isValidPhoneNumber(element.value.trim())) {
+            isValid = false;
+            displayValidationMessage(element, 'Invalid phone number format. Use XXXX-XXXX-XXX');
+        }
+    }
+    if (isValid) {
+        console.log("Form submitted. Data:", elements);
+        clearForm();
+        alert("Form submitted successfully!");
+    }
+}
+function clearForm() {
+    const form = document.getElementById('jobApplicationForm');
+    form.reset();
+}
+function displayValidationMessage(element, message) {
+    const validationMessage = document.createElement('p');
+    validationMessage.className = 'validation-message';
+    validationMessage.textContent = message;
+    element.parentNode.insertBefore(validationMessage, element.nextSibling);
+}
+function resetValidationMessages() {
+    const validationMessages = document.querySelectorAll('.validation-message');
+    validationMessages.forEach(message => {
+        message.parentNode.removeChild(message);
+    });
+}
+function viewApplicationsAsTable() {
+    const form = document.getElementById('jobApplicationForm');
+    const elements = form.elements;
+    if (form.checkValidity()) {
+        const table = document.createElement('table');
+        table.border = '1';
+        const headerRow = table.insertRow();
+        for (let i = 0; i < elements.length; i++) {
+            const headerCell = document.createElement('th');
+            headerCell.textContent = elements[i].name;
+            headerRow.appendChild(headerCell);
+        }
+        const dataRow = table.insertRow();
+        for (let i = 0; i < elements.length; i++) {
+            const dataCell = document.createElement('td');
+            dataCell.textContent = elements[i].value;
+            dataRow.appendChild(dataCell);
+        }
+        document.getElementById('applicationsTableContainer').innerHTML = '';
+        document.getElementById('applicationsTableContainer').appendChild(table);
+    } else {
+        const errorMessage = document.createElement('p');
+        errorMessage.className = 'validation-message';
+        errorMessage.textContent = 'Cannot view as table. Please fill the form first.';
+        document.getElementById('applicationsTableContainer').innerHTML = '';
+        document.getElementById('applicationsTableContainer').appendChild(errorMessage);
+    }
+}
+
+
+</script>
